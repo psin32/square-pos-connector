@@ -1,0 +1,29 @@
+{
+   "object":{
+      "id":"{{object.id}}",
+      "imageId": "{{object.imageId}}",
+      "itemData":{
+         "name":"{{object.itemData.name}}",
+         "description":"{{object.itemData.description}}",
+         "variations":[
+            {% for variation in object.itemData.variations %}
+               {
+                  "id":"{{variation.id}}",
+                  "itemVariationData":{
+                     "itemId":"{{variation.itemVariationData.itemId}}",
+                     "name":"{{variation.itemVariationData.name}}",
+                     "sku":"{{variation.itemVariationData.sku}}",
+                     "priceMoney":{
+                        "amount":{{variation.itemVariationData.priceMoney.amount}},
+                        "currency":"{{variation.itemVariationData.priceMoney.currency}}"
+                     }
+                  }
+               }
+               {% if not loop.last %}
+                  ,
+               {% endif %}
+            {% endfor %}
+         ]
+      }
+   }
+}

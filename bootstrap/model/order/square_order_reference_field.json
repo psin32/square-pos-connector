@@ -1,0 +1,22 @@
+{
+    "data": {
+        "type": "field",
+        "name": "Square Order Reference",
+        "slug": "square_order_reference",
+        "field_type": "string",
+        "description": "Square Order Reference",
+        "required": false,
+        "unique": false,
+        "enabled": true,
+        "order": 0,
+        "omit_null": true,
+        "relationships": {
+            "flow": {
+                "data": {
+                    "type": "flow",
+                    "id": "FLOW_ID"
+                }
+            }
+        }
+    }
+}

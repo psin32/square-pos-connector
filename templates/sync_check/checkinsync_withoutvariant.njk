@@ -1,0 +1,28 @@
+{
+   "object":{
+      "id":"{{data.item_reference}}",
+      "imageId": "{{data.image_reference}}",
+      "itemData":{
+         "name":"{{data.name}}",
+         "description":"{{data.description}}",
+         "variations":[
+            {
+               "id":"{{data.item_variation_reference}}",
+               "itemVariationData":{
+                  "itemId":"{{data.item_reference}}",
+                  "name":"{{data.name}}",
+                  "sku":"{{data.sku}}",
+                  {% for price in data.price %}
+                     {% if price.currency == currency %}
+                        "priceMoney":{
+                           "amount":{{price.amount}},
+                           "currency":"{{price.currency}}"
+                        }
+                     {% endif %}
+                  {% endfor %}
+               }
+            }
+         ]
+      }
+   }
+}

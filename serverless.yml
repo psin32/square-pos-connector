@@ -1,0 +1,117 @@
+service: pos-connector
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  stage: ${self:custom.stage}
+  region: ${self:custom.region}
+  logRetentionInDays: 30
+  profile: ${self:custom.profile.${self:custom.stage}}
+  environment:
+    EPCC_CLIENT_ID: ${ssm:/square-pos/${self:custom.stage}/epcc_client_id}
+    EPCC_CLIENT_SECRET: ${ssm:/square-pos/${self:custom.stage}/epcc_client_secret}
+    SQUARE_ACCESS_TOKEN: ${ssm:/square-pos/${self:custom.stage}/square_access_token}
+    LOG_LEVEL: ${ssm:/square-pos/${self:custom.stage}/log_level}
+    EPCC_HOST: ${ssm:/square-pos/${self:custom.stage}/epcc_host}
+    DEFAULT_CURRENCY: ${ssm:/square-pos/${self:custom.stage}/default_currency}
+    SQUARE_ENVIRONMENT: production
+    API_KEY: ${ssm:/square-pos/${self:custom.stage}/api_key}
+    ENABLED_CUSTOM_DOMAIN_SETUP: ${ssm:/square-pos/${self:custom.stage}/enable_custom_domain}
+    EP_CONTEXT_TAG: ${ssm:/square-pos/${self:custom.stage}/tag}
+    EP_CHANNEL: ${ssm:/square-pos/${self:custom.stage}/channel}
+    ACCEPT_LANGUAGE: ${ssm:/square-pos/${self:custom.stage}/language}
+    ENABLED_PCM_PRODUCT_FULL_SYNC: ${ssm:/square-pos/${self:custom.stage}/enable_pcm_product_full_sync}
+    PCM_FULL_SYNC_SCHEDULER: ${ssm:/square-pos/${self:custom.stage}/pcm_full_sync_scheduler}
+
+plugins:
+  - serverless-offline
+  - serverless-aws-documentation
+  - serverless-mocha-plugin
+  - serverless-add-api-key
+  - serverless-domain-manager
+  - serverless-hosted-zone
+  - serverless-plugin-scripts
+
+custom:
+  scripts:
+    hooks:
+      'before:deploy:deploy': sh bootstrap/setup.sh ${self:provider.environment.EPCC_HOST} ${self:provider.environment.EPCC_CLIENT_ID} ${self:provider.environment.EPCC_CLIENT_SECRET}
+      'before:offline:start': sh bootstrap/setup.sh ${self:provider.environment.EPCC_HOST} ${self:provider.environment.EPCC_CLIENT_ID} ${self:provider.environment.EPCC_CLIENT_SECRET}
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+  profile:
+    dev: serverless
+    test: serverless
+    preprod: serverless
+    prod: serverless
+  domains:
+    prod: api.elasticpath.services
+    test: api-test.elasticpath.services
+    dev: api-dev.elasticpath.services
+  hostedZone:
+    name: elasticpath.services.
+  customDomain:
+    domainName: ${self:custom.domains.${self:provider.stage}}
+    basePath: 'square-pos-connector'
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+    enabled: ${self:provider.environment.ENABLED_CUSTOM_DOMAIN_SETUP}
+  serverless-offline:
+    httpPort: 3032
+    lambdaPort: 3033
+
+functions:
+  create-legacy-product:
+    handler: handler.legacyProductSync
+    timeout: 30
+    events:
+      - http:
+          path: v1/product
+          method: post
+          cors:
+            origin: '*'
+            headers: '*'
+            allowCredentials: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.x-moltin-secret-key
+            type: request
+  create-customer:
+    handler: handler.customerSync
+    timeout: 30
+    events:
+      - http:
+          path: v1/customer
+          method: post
+          cors:
+            origin: '*'
+            headers: '*'
+            allowCredentials: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.x-moltin-secret-key
+            type: request
+  create-order:
+    handler: handler.orderSync
+    timeout: 30
+    events:
+      - http:
+          path: v1/order
+          method: post
+          cors:
+            origin: '*'
+            headers: '*'
+            allowCredentials: true
+  pcm-product-full-sync:
+    handler: handler.productPCMFullSync
+    timeout: 900
+    events:
+      - schedule: 
+          rate: ${self:provider.environment.PCM_FULL_SYNC_SCHEDULER}
+          enabled: ${self:provider.environment.ENABLED_PCM_PRODUCT_FULL_SYNC}
+  authorizer:
+    handler: authorizer.handler

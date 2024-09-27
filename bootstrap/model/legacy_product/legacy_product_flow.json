@@ -1,0 +1,9 @@
+{
+    "data": {
+        "type": "flow",
+        "name": "Product",
+        "slug": "products",
+        "description": "Extends the Legacy Product object",
+        "enabled": true
+    }
+}

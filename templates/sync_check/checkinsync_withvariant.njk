@@ -1,0 +1,33 @@
+{
+   "object":{
+      "id":"{{data.item_reference}}",
+      "imageId": "{{data.image_reference}}",
+      "itemData":{
+         "name":"{{data.name}}",
+         "description":"{{data.description}}",
+         "variations":[
+            {% for childproduct in included.children %}
+               {
+                  "id":"{{childproduct.item_variation_reference}}",
+                  "itemVariationData":{
+                     "itemId":"{{data.item_reference}}",
+                     "name":"{{childproduct.name}}",
+                     "sku":"{{childproduct.sku}}",
+                     {% for price in childproduct.price %}
+                        {% if price.currency == currency %}
+                           "priceMoney":{
+                              "amount":{{price.amount}},
+                              "currency":"{{price.currency}}"
+                           }
+                        {% endif %}
+                     {% endfor %}
+                  }
+               }
+               {% if not loop.last %}
+                  ,
+               {% endif %}
+            {% endfor %}
+         ]
+      }
+   }
+}

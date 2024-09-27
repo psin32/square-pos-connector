@@ -1,0 +1,22 @@
+{
+    "data": {
+        "type": "field",
+        "name": "Item Variation Reference",
+        "slug": "item_variation_reference",
+        "field_type": "string",
+        "description": "Item Variation Reference",
+        "required": false,
+        "unique": false,
+        "enabled": true,
+        "order": 0,
+        "omit_null": true,
+        "relationships": {
+            "flow": {
+                "data": {
+                    "type": "flow",
+                    "id": "FLOW_ID"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,36 @@
+{
+   "idempotencyKey":"{{{idempotencyKey}}}",
+   "object":{
+      "type":"ITEM",
+      "id":"#P{{{data.sku}}}",
+      "productType": "REGULAR",
+      "itemData":{
+         "name":"{{{data.name}}}",
+         "description":"{{{data.description}}}",
+         "availableOnline":true,
+         "availableForPickup":true,
+         "availableElectronically":true,
+         "variations":[
+            {
+               "type":"ITEM_VARIATION",
+               "id":"#{{{data.sku}}}",
+               "itemVariationData":{
+                  "itemId":"#P{{{data.sku}}}",
+                  "name":"{{{data.name}}}",
+                  "sku":"{{{data.sku}}}",
+                  "pricingType":"FIXED_PRICING",
+                  {{#data.price}}
+                     "priceMoney":{
+                        "amount":{{amount}},
+                        "currency":"{{currency}}"
+                     },
+                  {{/data.price}}
+                  "trackInventory":true,
+                  "availableForBooking":true,
+                  "stockable":true
+               }
+            }
+         ]
+      }
+   }
+}

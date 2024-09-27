@@ -1,0 +1,56 @@
+{
+   "idempotencyKey":"{{idempotencyKey}}",
+   "object":{
+      "type":"ITEM",
+      "presentAtAllLocations": true,
+      {% if data.item_reference != null %}
+         "id":"{{data.item_reference}}",
+         "version": {{version}},
+      {% else %}
+         "id":"##{{data.sku}}",
+      {% endif %}
+      {% if imageId != null %}
+         "imageId": "{{imageId}}",
+      {% endif %}
+      "productType": "REGULAR",      
+      "itemData":{
+         "name":"{{data.name}}",
+         "description":"{{data.description}}",
+         "availableOnline":true,
+         "availableForPickup":true,
+         "availableElectronically":true,
+         "variations":[
+            {
+               "type":"ITEM_VARIATION",
+               {% if data.item_variation_reference != null %}
+                  "id":"{{data.item_variation_reference}}",
+                  "version": {{version}},
+               {% else %}
+                  "id":"#{{data.sku}}",
+               {% endif %}
+               "itemVariationData":{
+                  {% if data.item_reference != null %}
+                     "itemId":"{{data.item_reference}}",
+                  {% else %}
+                     "itemId":"##{{data.sku}}",
+                  {% endif %}
+                  "name":"{{data.name}}",
+                  "sku":"{{data.sku}}",
+                  "pricingType":"FIXED_PRICING",
+                  {% for price in data.price %}
+                     {% if price.currency == currency %}
+                        "priceMoney":{
+                           "amount":{{price.amount}},
+                           "currency":"{{price.currency}}"
+                        }, 
+                     {% endif %}
+                  {% endfor %}
+                  "trackInventory":false,
+                  "availableForBooking":true,
+                  "stockable":true
+               }
+            }
+         ]
+      }
+   }
+}

@@ -1,0 +1,73 @@
+{
+  "name": "square-pos-connector",
+  "version": "0.1.0",
+  "license": "MIT",
+  "dependencies": {
+    "@moltin/request": "^1.6.2",
+    "@moltin/sdk": "^6.1.2",
+    "axios": "^0.21.1",
+    "body-parser": "^1.19.0",
+    "clean-deep": "^3.4.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "form-data": "^4.0.0",
+    "http": "0.0.1-security",
+    "https": "^1.0.0",
+    "jsonpath": "^1.1.1",
+    "lodash.where": "^3.1.0",
+    "loglevel": "^1.7.1",
+    "moment": "^2.29.1",
+    "mustache": "^4.2.0",
+    "node-fetch": "^2.6.1",
+    "nunjucks": "^3.2.3",
+    "request": "^2.88.2",
+    "serverless-aws-documentation": "^1.1.0",
+    "serverless-hosted-zone": "0.0.6",
+    "serverless-plugin-scripts": "^1.0.2",
+    "serverless-reqvalidator-plugin": "^1.0.4",
+    "square": "^12.0.0",
+    "uuid": "^8.3.2",
+    "uuidv4": "^6.2.7"
+  },
+  "scripts": {
+    "dev": "node server/express.js .env",
+    "start": "NODE_ENV=production node server/express.js .env",
+    "test": "jest"
+  },
+  "jest": {
+    "cacheDirectory": "cache",
+    "collectCoverageFrom": [
+      "**/*.js",
+      "!**/eslint-plugin-control/**",
+      "!**/node_modules/**",
+      "!**/coverage/**",
+      "!webpack.config.js"
+    ],
+    "roots": [
+      "<rootDir>"
+    ],
+    "modulePaths": [
+      "<rootDir>",
+      "client",
+      "components"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "client",
+      "components"
+    ]
+  },
+  "devDependencies": {
+    "@semantic-release/gitlab-config": "^8.0.0",
+    "jest": "^26.6.3",
+    "semantic-release": "^17.1.1",
+    "serverless-add-api-key": "^4.2.0",
+    "serverless-domain-manager": "^4.2.3",
+    "serverless-jest-plugin": "^0.3.0",
+    "serverless-mocha-plugin": "^1.12.0",
+    "serverless-offline": "^6.4.0",
+    "serverless-prune-plugin": "^1.4.3",
+    "serverless-ssm-fetch": "^1.0.2",
+    "standard": "^14.3.4"
+  }
+}

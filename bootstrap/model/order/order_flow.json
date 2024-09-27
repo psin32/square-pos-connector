@@ -1,0 +1,9 @@
+{
+    "data": {
+        "type": "flow",
+        "name": "Order",
+        "slug": "orders",
+        "description": "Extends the Orders object",
+        "enabled": true
+    }
+}

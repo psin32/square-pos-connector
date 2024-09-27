@@ -1,0 +1,9 @@
+{
+    "data": {
+        "type": "flow",
+        "name": "Customer",
+        "slug": "customers",
+        "description": "Extends the Customer object",
+        "enabled": true
+    }
+}

@@ -1,0 +1,60 @@
+{
+   "idempotencyKey":"{{idempotencyKey}}",
+   "object":{
+      "type":"ITEM",
+      "presentAtAllLocations": true,
+      {% if reference.item_reference != null %}
+         "id":"{{reference.item_reference}}",
+         "version": {{version.item_version}},
+      {% else %}
+         "id":"##{{attributes.sku}}",
+      {% endif %}
+      {% if imageId != null %}
+         "imageId": "{{imageId}}",
+      {% endif %}
+      "productType": "REGULAR",      
+      "itemData":{
+         "name":"{{attributes.name}}",
+         "description":"{{attributes.description}}",
+         "availableOnline":true,
+         "availableForPickup":true,
+         "availableElectronically":true,
+         "variations":[
+            {
+               "type":"ITEM_VARIATION",
+               {% if reference.item_variation_reference != null %}
+                  "id":"{{reference.item_variation_reference}}",
+                  {% if version.variation_version == 1 %}
+                     "version": 1,
+                  {% else %}
+                     {% for variation in version.variation_version %}
+                        {% if variation.sku == attributes.sku %}
+                           "version": {{variation.version}},
+                        {% endif %}
+                     {% endfor %}
+                  {% endif %}
+               {% else %}
+                  "id":"#{{attributes.sku}}",
+               {% endif %}
+               "itemVariationData":{
+                  {% if reference.item_reference != null %}
+                     "itemId":"{{reference.item_reference}}",
+                  {% else %}
+                     "itemId":"##{{attributes.sku}}",
+                  {% endif %}
+                  "name":"{{attributes.name}}",
+                  "sku":"{{attributes.sku}}",
+                  "pricingType":"FIXED_PRICING",
+                  "priceMoney":{
+                     "amount":{{attributes.price[currency].amount}},
+                     "currency":"{{currency}}"
+                  },
+                  "trackInventory":false,
+                  "availableForBooking":true,
+                  "stockable":true
+               }
+            }
+         ]
+      }
+   }
+}

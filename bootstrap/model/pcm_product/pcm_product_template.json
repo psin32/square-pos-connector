@@ -1,0 +1,9 @@
+{
+    "data": {
+        "type": "flow",
+        "name": "PCM Product",
+        "slug": "products(reference)",
+        "description": "Extends the PCM Product object",
+        "enabled": true
+    }
+}

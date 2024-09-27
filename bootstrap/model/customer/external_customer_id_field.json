@@ -1,0 +1,22 @@
+{
+    "data": {
+        "type": "field",
+        "name": "External Customer ID",
+        "slug": "external_customer_id",
+        "field_type": "string",
+        "description": "External Customer ID",
+        "required": false,
+        "unique": false,
+        "enabled": true,
+        "order": 0,
+        "omit_null": true,
+        "relationships": {
+            "flow": {
+                "data": {
+                    "type": "flow",
+                    "id": "FLOW_ID"
+                }
+            }
+        }
+    }
+}

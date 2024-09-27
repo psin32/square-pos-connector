@@ -1,0 +1,63 @@
+{
+   "idempotencyKey":"{{idempotencyKey}}",
+   "object":{
+      "type":"ITEM",
+      "presentAtAllLocations": true,
+      {% if data.item_reference != null %}
+         "id":"{{data.item_reference}}",
+         "version": {{version}},
+      {% else %}
+         "id":"##{{data.sku}}",
+         "version": 1,
+      {% endif %}
+      {% if imageId != null %}
+         "imageId": "{{imageId}}",
+      {% endif %}
+      "productType": "REGULAR",
+      "itemData":{
+         "name":"{{data.name}}",
+         "description":"{{data.description}}",
+         "availableOnline":true,
+         "availableForPickup":true,
+         "availableElectronically":true,
+         "variations":[
+            {% for childproduct in included.children %}
+               {
+                  "type":"ITEM_VARIATION",
+                  {% if childproduct.item_variation_reference != null %}
+                     "id":"{{childproduct.item_variation_reference}}",
+                     "version": {{version}},
+                  {% else %}
+                     "id":"#{{childproduct.sku}}",
+                     "version": 1,
+                  {% endif %}
+                  "itemVariationData":{
+                     {% if data.item_reference != null %}
+                        "itemId":"{{data.item_reference}}",
+                     {% else %}
+                        "itemId":"##{{data.sku}}",
+                     {% endif %}
+                     "name":"{{childproduct.name}}",
+                     "sku":"{{childproduct.sku}}",
+                     "pricingType":"FIXED_PRICING",
+                     {% for price in childproduct.price %}
+                        {% if price.currency == currency %}
+                           "priceMoney":{
+                              "amount":{{price.amount}},
+                              "currency":"{{price.currency}}"
+                           }, 
+                        {% endif %}
+                     {% endfor %}
+                     "trackInventory":false,
+                     "availableForBooking":true,
+                     "stockable":true
+                  }
+               }
+               {% if not loop.last %}
+                  ,
+               {% endif %}
+            {% endfor %}
+         ]
+      }
+   }
+}
